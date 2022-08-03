@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:real_estate_mobile_app/Models/products.dart';
+import 'package:real_estate_mobile_app/Widgets/details.dart';
 
 void main() {
   runApp(const MyApp());
@@ -51,12 +53,8 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
   void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
+    setState(() {});
   }
 
   @override
@@ -292,63 +290,174 @@ class _MyHomePageState extends State<MyHomePage> {
               ],
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.only(left: 16.0, top: 16.0),
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: Container(
-                width: MediaQuery.of(context).size.width * 0.75,
-                height: MediaQuery.of(context).size.height * 0.5,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(16.0),
-                  color: Colors.grey,
-                ),
-                child: Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(32.0),
-                            child: Image.asset(
-                              'assets/images/modern.jpg',
-                              width: MediaQuery.of(context).size.width * 0.65,
-                              height: MediaQuery.of(context).size.height * 0.3,
-                              fit: BoxFit.fill,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text("Modern Family House"),
-                        Row(
-                          children: [
-                            Icon(Icons.gps_fixed_outlined),
-                            Text("168 Old town road")
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            Text("886/Month"),
-                            Spacer(),
-                            Icon(Icons.star),
-                            Text("4.9")
-                          ],
-                        ),
-                      ],
-                    ),
-                  ],
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 16.0,
+              ),
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: List.generate(
+                      products.length,
+                      (index) => ItemCard(
+                            product: products[index],
+                            press: () => Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => DetailsScreen(
+                                    product: products[index],
+                                  ),
+                                )),
+                          )),
                 ),
               ),
             ),
           ),
         ],
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        showSelectedLabels: false,
+        showUnselectedLabels: false,
+        items: [
+          BottomNavigationBarItem(
+            icon: IconButton(
+              icon: Icon(
+                Icons.home,
+                color: Colors.black,
+              ),
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => MyHomePage(title: 'Home Page'),
+                  ),
+                );
+              },
+            ),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: IconButton(
+              icon: Icon(
+                Icons.favorite_border,
+                color: Colors.black,
+              ),
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => MyHomePage(title: 'Home Page'),
+                  ),
+                );
+              },
+            ),
+            label: 'Business',
+          ),
+          BottomNavigationBarItem(
+            icon: IconButton(
+              icon: Icon(
+                Icons.message,
+                color: Colors.black,
+              ),
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => MyHomePage(title: 'Home Page'),
+                  ),
+                );
+              },
+            ),
+            label: 'School',
+          ),
+          BottomNavigationBarItem(
+            icon: IconButton(
+              icon: Icon(
+                Icons.account_box_outlined,
+                color: Colors.black,
+              ),
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => MyHomePage(title: 'Home Page'),
+                  ),
+                );
+              },
+            ),
+            label: 'New',
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class ItemCard extends StatelessWidget {
+  final Product product;
+  final VoidCallback press;
+  const ItemCard({
+    Key? key,
+    required this.press,
+    required this.product,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 16.0, top: 16.0),
+      child: Align(
+        alignment: Alignment.centerLeft,
+        child: Container(
+          width: MediaQuery.of(context).size.width * 0.7,
+          height: MediaQuery.of(context).size.height * 0.5,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(16.0),
+            color: Colors.grey[200],
+          ),
+          child: GestureDetector(
+            onTap: press,
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(32.0),
+                        child: Image.asset(
+                          'assets/images/modern.jpg',
+                          width: MediaQuery.of(context).size.width * 0.6,
+                          height: MediaQuery.of(context).size.height * 0.3,
+                          fit: BoxFit.fill,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text("${product.title}"),
+                    Row(
+                      children: [
+                        Icon(Icons.gps_fixed_outlined),
+                        Text("168 Old town road")
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Text("\$886/Month"),
+                        Spacer(),
+                        Icon(Icons.star),
+                        Text("4.9")
+                      ],
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }
